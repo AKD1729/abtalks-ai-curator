@@ -139,7 +139,7 @@ app.get('/api/agent/feed', async (req, res) => {
 });
 
 // Fallback route for SPA / Feed Viewer
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
