@@ -1,0 +1,18 @@
+{
+  "name": "abtalks-ai-curator-root",
+  "version": "1.0.0",
+  "description": "AB Talks AI Curator - Autonomous AI Creator",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "postinstall": "cd backend && npm install",
+    "build": "cd backend && npm install"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.23.0"
+  }
+}
