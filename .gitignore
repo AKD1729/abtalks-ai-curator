@@ -1,5 +1,16 @@
-node_modules/
+# Environment variables
 .env
 .env.local
+
+# Node modules
+node_modules/
+
+# OS / Logs
 .DS_Store
 *.log
+npm-debug.log*
+
+# Database & temp media
+data/
+backend/data/*.json
+WhatsApp*
