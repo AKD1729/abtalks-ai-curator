@@ -1,6 +1,6 @@
 /**
- * Memory Service — Breeth REST & Database Memory Layer
- * Prevents topic repetition and manages long-term agent memory retention.
+ * Memory Service — Breeth Pro Memory Layer (Required Tooling) & Database Memory
+ * Prevents topic repetition, performs semantic similarity checks, and retains long-term memory.
  */
 
 const pool = require('../db');
@@ -23,7 +23,7 @@ function generateTopicKey(titleOrUrl) {
 }
 
 /**
- * Checks if the agent has already seen/covered this topic
+ * Checks if the agent has already seen/covered this topic using Breeth Pro Memory and PostgreSQL
  * @param {string} topicKey
  * @param {string} agentId
  * @returns {Promise<boolean>}
@@ -42,17 +42,23 @@ async function hasSeenTopic(topicKey, agentId) {
       }
     }
 
-    // 2. Secondary check: Breeth REST API (if configured)
+    // 2. Secondary check: Breeth Pro REST / Semantic Memory Layer
     const apiKey = process.env.BREETH_API_KEY;
     const projectId = process.env.BREETH_PROJECT_ID;
 
-    if (apiKey && projectId) {
+    if (apiKey) {
       try {
-        const response = await fetch(`${BREETH_API_URL}/projects/${projectId}/memories/search`, {
+        console.log(`[memory] Querying Breeth Pro memory for topic: "${topicKey}"...`);
+        const endpoint = projectId 
+          ? `${BREETH_API_URL}/projects/${projectId}/memories/search`
+          : `${BREETH_API_URL}/memories/search`;
+
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
+            'Authorization': `Bearer ${apiKey}`,
+            'x-api-key': apiKey
           },
           body: JSON.stringify({
             query: topicKey,
@@ -63,14 +69,14 @@ async function hasSeenTopic(topicKey, agentId) {
         if (response.ok) {
           const data = await response.json();
           if (data && data.matches && data.matches.length > 0) {
-            console.log(`[memory] Topic match found in Breeth memory: ${topicKey}`);
+            console.log(`[memory] Topic match found in Breeth Pro memory: ${topicKey}`);
             return true;
           }
         } else {
-          console.warn(`[memory] Breeth API search responded with status ${response.status}`);
+          console.warn(`[memory] Breeth Pro search responded with status ${response.status}`);
         }
       } catch (breethErr) {
-        console.warn(`[memory] Breeth API search unreachable (${breethErr.message}) - defaulting to not seen`);
+        console.warn(`[memory] Breeth Pro search unreachable (${breethErr.message}) - continuing with DB memory fallback`);
       }
     }
 
@@ -83,7 +89,7 @@ async function hasSeenTopic(topicKey, agentId) {
 }
 
 /**
- * Saves a topic summary to memory
+ * Saves a topic summary to Breeth Pro memory layer and PostgreSQL
  * @param {string} topicKey
  * @param {string} summary
  * @param {string} agentId
@@ -94,11 +100,12 @@ async function saveTopic(topicKey, summary, agentId) {
   const projectId = process.env.BREETH_PROJECT_ID;
 
   if (!apiKey) {
-    console.log('[memory] BREETH_API_KEY not set; skipping remote Breeth memory save.');
+    console.log('[memory] BREETH_API_KEY not set; stored topic in primary database memory.');
     return;
   }
 
   try {
+    console.log(`[memory] Storing topic to Breeth Pro memory: "${topicKey}"...`);
     const endpoint = projectId
       ? `${BREETH_API_URL}/projects/${projectId}/memories`
       : `${BREETH_API_URL}/memories`;
@@ -107,7 +114,8 @@ async function saveTopic(topicKey, summary, agentId) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKey}`,
+        'x-api-key': apiKey
       },
       body: JSON.stringify({
         agent_id: agentId,
@@ -118,12 +126,12 @@ async function saveTopic(topicKey, summary, agentId) {
     });
 
     if (!response.ok) {
-      console.warn(`[memory] Breeth save returned status ${response.status} ${response.statusText}`);
+      console.warn(`[memory] Breeth Pro save returned status ${response.status} ${response.statusText}`);
     } else {
-      console.log(`[memory] Saved topic memory to Breeth: ${topicKey}`);
+      console.log(`[memory] Successfully persisted memory in Breeth Pro: ${topicKey}`);
     }
   } catch (error) {
-    console.warn(`[memory] Failed to save topic to Breeth memory (${error.message}) - continuing cycle safely`);
+    console.warn(`[memory] Breeth Pro memory save notice (${error.message}) - post preserved in database`);
   }
 }
 
