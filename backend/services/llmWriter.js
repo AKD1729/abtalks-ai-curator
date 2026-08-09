@@ -1,27 +1,120 @@
 /**
- * LLM Writer Service — Anthropic Claude Persona Writer
+ * LLM Writer Service — Multi-Provider AI Persona Writer (Google Gemini & Anthropic Claude)
  * Writes high-signal curated posts with explicit selection rationale and retry resilience.
  */
 
 const { withRetry } = require('./retry');
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-5-haiku-20241022';
+const DEFAULT_ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-5-haiku-20241022';
+const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 
 /**
- * Generates an editorial post and selection rationale using Anthropic Claude
+ * Generates an editorial post and selection rationale using Gemini or Claude
  * @param {Object} params
  * @param {Object} params.agent Agent metadata { name, persona_description, topic_focus }
  * @param {Object} params.topic Topic item { id, title, url, score, by, source }
  * @returns {Promise<{title: string, content: string, rationale: string}>}
  */
 async function generatePost({ agent, topic }) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
 
-  if (!apiKey) {
-    console.warn('[llmWriter] ANTHROPIC_API_KEY is not set. Generating fallback structured post.');
-    return generateFallbackPost({ agent, topic });
+  if (geminiKey) {
+    return generateWithGemini({ agent, topic, apiKey: geminiKey });
   }
+
+  if (anthropicKey) {
+    return generateWithAnthropic({ agent, topic, apiKey: anthropicKey });
+  }
+
+  console.warn('[llmWriter] Neither GEMINI_API_KEY nor ANTHROPIC_API_KEY set. Generating fallback structured post.');
+  return generateFallbackPost({ agent, topic });
+}
+
+/**
+ * Generates post using Google Gemini API
+ */
+async function generateWithGemini({ agent, topic, apiKey }) {
+  console.log(`[llmWriter] Generating post via Google Gemini for "${topic.title}"...`);
+
+  const prompt = `You are ${agent.name}, an autonomous AI curator and technology thought leader.
+
+Your Persona:
+${agent.persona_description}
+
+Your Primary Topic Focus:
+${agent.topic_focus}
+
+Trending Story to Curate:
+Source: ${topic.source || 'Hacker News'}
+Title: ${topic.title}
+Source URL: ${topic.url}
+Engagement: ${topic.score || 'N/A'} points by ${topic.by || 'community'}
+
+CRITICAL INSTRUCTIONS:
+1. Stay strictly in character and voice.
+2. Provide original analysis and sharp takeaways, not just a summary.
+3. Include an explicit "rationale" explaining why you selected this story, how it fits your topic focus, and explicitly cite ${topic.url}.
+4. Output MUST be a valid JSON object with exact keys: "title", "content", "rationale".
+
+JSON Structure:
+{
+  "title": "Your catchy, thought-provoking post title",
+  "content": "Your in-depth analysis and perspective in your persona's voice (2-4 punchy paragraphs)",
+  "rationale": "Explicit explanation of why this topic was selected, its relevance to ${agent.topic_focus}, and citing ${topic.url}"
+}`;
+
+  try {
+    return await withRetry(async () => {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${DEFAULT_GEMINI_MODEL}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Gemini API error (${response.status}): ${errorText}`);
+      }
+
+      const data = await response.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+      const parsed = JSON.parse(rawText);
+
+      if (!parsed.title || !parsed.content || !parsed.rationale) {
+        throw new Error('Gemini JSON is missing required fields (title, content, or rationale)');
+      }
+
+      return {
+        title: parsed.title.trim(),
+        content: parsed.content.trim(),
+        rationale: parsed.rationale.trim()
+      };
+    }, { maxRetries: 2, initialDelayMs: 1000 });
+  } catch (error) {
+    console.error('[llmWriter] Error calling Gemini API after retries:', error.message);
+    return generateFallbackPost({ agent, topic, errorReason: error.message });
+  }
+}
+
+/**
+ * Generates post using Anthropic Claude API
+ */
+async function generateWithAnthropic({ agent, topic, apiKey }) {
+  console.log(`[llmWriter] Generating post via Anthropic Claude for "${topic.title}"...`);
 
   const systemPrompt = `You are ${agent.name}, an autonomous AI curator and technology thought leader.
 
@@ -31,13 +124,11 @@ ${agent.persona_description}
 Your Primary Topic Focus:
 ${agent.topic_focus}
 
-Your task is to analyze a trending tech story from ${topic.source || 'Tech Community'}, assess its significance through your unique editorial lens, and write an insightful, engaging commentary post for your audience.
-
 CRITICAL REQUIREMENTS:
 1. Stay strictly in character and voice.
 2. Provide original analysis and sharp takeaways, not just a summary.
 3. Include an explicit "rationale" explaining why you selected this story, how it fits your topic focus, and explicitly cite the source URL (${topic.url}).
-4. Output MUST be valid JSON with exact keys: "title", "content", "rationale". Do not include any text outside the JSON object.`;
+4. Output MUST be valid JSON with exact keys: "title", "content", "rationale".`;
 
   const userPrompt = `Trending Story to Curate:
 Source: ${topic.source || 'Hacker News'}
@@ -45,7 +136,7 @@ Title: ${topic.title}
 Source URL: ${topic.url}
 Engagement: ${topic.score || 'N/A'} points by ${topic.by || 'community'}
 
-Please generate your post in valid JSON with this exact structure:
+Please generate your post in valid JSON:
 {
   "title": "Your catchy, thought-provoking post title",
   "content": "Your in-depth analysis and perspective in your persona's voice (2-4 punchy paragraphs)",
@@ -62,7 +153,7 @@ Please generate your post in valid JSON with this exact structure:
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: DEFAULT_MODEL,
+          model: DEFAULT_ANTHROPIC_MODEL,
           max_tokens: 1200,
           temperature: 0.7,
           system: systemPrompt,
@@ -104,7 +195,7 @@ Please generate your post in valid JSON with this exact structure:
 }
 
 /**
- * Generates a structured fallback post when API is unavailable or rate-limited
+ * Structured fallback post when API is unavailable or rate-limited
  */
 function generateFallbackPost({ agent, topic, errorReason = '' }) {
   return {

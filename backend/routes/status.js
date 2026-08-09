@@ -45,6 +45,7 @@ router.get('/status', async (req, res) => {
 
     const breethConfigured = Boolean(process.env.BREETH_API_KEY && process.env.BREETH_PROJECT_ID);
     const claudeConfigured = Boolean(process.env.ANTHROPIC_API_KEY);
+    const geminiConfigured = Boolean(process.env.GEMINI_API_KEY);
 
     return res.status(200).json({
       status: 'operational',
@@ -61,8 +62,9 @@ router.get('/status', async (req, res) => {
         topic_focus: activeAgent.topic_focus
       } : { status: 'uninitialized' },
       integrations: {
-        breethMemory: breethConfigured ? 'configured' : 'fallback_mode',
-        anthropicClaude: claudeConfigured ? 'configured' : 'fallback_mode'
+        breethMemory: breethConfigured ? 'active' : 'fallback_mode',
+        geminiAI: geminiConfigured ? 'active' : 'not_configured',
+        anthropicClaude: claudeConfigured ? 'active' : 'not_configured'
       },
       lastCycle: lastCycleExecution || { status: 'waiting_for_first_cycle' }
     });
