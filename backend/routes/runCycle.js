@@ -10,6 +10,8 @@ const { fetchTopTopics } = require('../services/topicSource');
 const { generateTopicKey, hasSeenTopic, saveTopic } = require('../services/memory');
 const { generatePost } = require('../services/llmWriter');
 
+const { recordCycleTelemetry } = require('./status');
+
 router.post('/run-cycle', async (req, res) => {
   console.log('[runCycle] Starting autonomous curation cycle...');
 
@@ -30,6 +32,7 @@ router.post('/run-cycle', async (req, res) => {
 
     if (agentResult.rows.length === 0) {
       console.warn('[runCycle] No agent found in database. Please initialize an agent first via POST /api/agent/init.');
+      recordCycleTelemetry({ status: 'skipped', reason: 'no_agent' });
       return res.status(200).json({
         status: 'skipped',
         message: 'No agent found. Run POST /api/agent/init first.'
@@ -39,11 +42,12 @@ router.post('/run-cycle', async (req, res) => {
     const agent = agentResult.rows[0];
     console.log(`[runCycle] Running curation cycle for agent: "${agent.name}" (${agent.id})`);
 
-    // 3. Fetch candidate topics from Hacker News
-    const topics = await fetchTopTopics(15);
+    // 3. Fetch candidate topics from Hacker News & Dev.to
+    const topics = await fetchTopTopics();
 
     if (!topics || topics.length === 0) {
       console.warn('[runCycle] No topics fetched from source.');
+      recordCycleTelemetry({ status: 'skipped', reason: 'no_topics' });
       return res.status(200).json({
         status: 'skipped',
         message: 'No topics found from source'
@@ -65,14 +69,14 @@ router.post('/run-cycle', async (req, res) => {
       }
     }
 
-    // If all top 15 were previously seen, choose the highest scoring topic with a timestamped variation key
+    // If all top candidate topics were previously seen, choose the highest scoring topic with a timestamped variation key
     if (!selectedTopic) {
       console.log('[runCycle] All top candidate topics already seen. Selecting freshest top story for follow-up.');
       selectedTopic = topics[0];
       selectedTopicKey = generateTopicKey(`${selectedTopic.title}-${Date.now()}`);
     }
 
-    console.log(`[runCycle] Selected topic: "${selectedTopic.title}" (Key: ${selectedTopicKey})`);
+    console.log(`[runCycle] Selected topic: "${selectedTopic.title}" (Source: ${selectedTopic.source || 'HN'}, Key: ${selectedTopicKey})`);
 
     // 5. Generate thoughtful post & rationale using Claude LLM
     const generated = await generatePost({ agent, topic: selectedTopic });
@@ -98,6 +102,15 @@ router.post('/run-cycle', async (req, res) => {
     // 7. Save topic memory to Breeth
     await saveTopic(selectedTopicKey, generated.content, agent.id);
 
+    // Record success telemetry
+    recordCycleTelemetry({
+      status: 'success',
+      agentId: agent.id,
+      postTitle: createdPost.title,
+      postId: createdPost.id,
+      source: selectedTopic.source || 'Hacker News'
+    });
+
     return res.status(200).json({
       status: 'success',
       agent: {
@@ -107,8 +120,8 @@ router.post('/run-cycle', async (req, res) => {
       post: createdPost
     });
   } catch (cycleError) {
-    // Top-level catch as required by spec: log error and return 200 OK so scheduler continues
     console.error('[runCycle] Unhandled error during autonomous cycle:', cycleError);
+    recordCycleTelemetry({ status: 'error', error: cycleError.message });
     return res.status(200).json({
       status: 'error',
       message: 'Cycle encountered an error but recovered safely.',
