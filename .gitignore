@@ -19,5 +19,6 @@ WhatsApp*
 *.jpg
 *.png
 
-# Project Retrospective (excluded from git)
+# Project Retrospective & Local Notes (excluded from git)
 PROJECT_RETROSPECTIVE.md
+LINKEDIN_POST.md
