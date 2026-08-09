@@ -889,31 +889,239 @@ body {
 }
 
 /* ==========================================================================
-   Responsive Adaptations
+   Responsive Adaptations (Mobile, iPad, Tablet, Laptop)
    ========================================================================== */
+
+/* Tablet & iPad Portrait / Landscape (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .main-layout {
+    margin: 1.5rem auto 3rem;
+    padding: 0 1.25rem;
+  }
+  .agent-command-center {
+    padding: 1.75rem;
+  }
+  .telemetry-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+}
+
+/* Mobile & Small Tablet Devices (max-width: 768px) */
 @media (max-width: 768px) {
+  .app-header {
+    padding: 0.65rem 0;
+  }
+  .header-inner {
+    padding: 0 1rem;
+    gap: 0.5rem;
+  }
+  .brand-group {
+    gap: 0.5rem;
+  }
+  .brand-badge {
+    display: none; /* Keep header ultra clean and 1-line on mobile */
+  }
+  .brand-title {
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+  .header-telemetry {
+    gap: 0.5rem;
+  }
+  .status-indicator-pill {
+    padding: 0.35rem 0.55rem;
+  }
+  .status-indicator-pill .status-label {
+    display: none; /* Only show active glowing radar pulse on mobile */
+  }
+  .btn-github {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+  }
+  .btn-github svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Command Center */
+  .main-layout {
+    margin: 1rem auto 2.5rem;
+    padding: 0 0.85rem;
+  }
+  .agent-command-center {
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
   .agent-profile-header {
     flex-direction: column;
     text-align: center;
+    gap: 1.2rem;
+    margin-bottom: 1.4rem;
+  }
+  .agent-avatar-icon {
+    width: 68px;
+    height: 68px;
+    font-size: 2rem;
+  }
+  .avatar-ring-pulse {
+    width: 82px;
+    height: 82px;
+    top: -7px;
+    left: -7px;
   }
   .agent-title-row {
     justify-content: center;
+    gap: 0.6rem;
+  }
+  .agent-name {
+    font-size: 1.5rem;
+  }
+  .agent-bio {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
   }
   .agent-focus-pills {
     justify-content: center;
+    gap: 0.4rem;
   }
-  .header-telemetry .status-label {
-    display: none;
+  .focus-pill {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.65rem;
   }
+
+  /* Telemetry 2x2 Grid on Mobile */
+  .telemetry-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding-top: 1.2rem;
+  }
+  .metric-card {
+    padding: 0.75rem 0.85rem;
+  }
+  .metric-label {
+    font-size: 0.68rem;
+  }
+  .metric-value {
+    font-size: 1.2rem;
+  }
+  .metric-subtext {
+    font-size: 0.72rem;
+  }
+
+  /* Controls & Filters */
   .feed-filter-row {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
   .search-box-wrapper {
     max-width: 100%;
   }
+  #searchInput {
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
+    font-size: 0.86rem;
+  }
+  .source-filter-pills {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .source-filter-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.78rem;
+  }
+
+  /* Action Bar */
+  .feed-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .feed-status-meta {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .feed-section-heading {
+    font-size: 1.15rem;
+  }
+  .action-btn-group {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .action-btn-group .btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.82rem;
+    padding: 0.55rem 0.8rem;
+  }
+
+  /* Posts Stream */
+  .posts-stream-container {
+    gap: 1.2rem;
+  }
+  .post-card {
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius-md);
+  }
+  .post-title {
+    font-size: 1.2rem;
+    line-height: 1.35;
+    margin-bottom: 0.9rem;
+  }
+  .post-body-text {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+  .neural-rationale-box {
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .rationale-content {
+    font-size: 0.84rem;
+    word-break: break-word;
+  }
+  .post-footer-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .footer-link-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Footer */
+  .app-footer {
+    padding: 2rem 0;
+  }
   .footer-inner {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  .footer-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra Small Phones (max-width: 380px) */
+@media (max-width: 380px) {
+  .brand-title {
+    font-size: 0.98rem;
+  }
+  .telemetry-metrics-grid {
+    grid-template-columns: 1fr;
   }
 }
