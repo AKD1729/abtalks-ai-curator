@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: abtalks-ai-curator
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: BREETH_API_KEY
+        sync: false
+      - key: BREETH_PROJECT_ID
+        sync: false
+      - key: RUN_CYCLE_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
