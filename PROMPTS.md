@@ -32,3 +32,18 @@ This document tracks the prompt interactions, tasks performed, and architecture 
   - Created `docs/schema.sql` defining PostgreSQL schemas for `agents` and `posts` tables with UUID primary keys and timestamps.
   - Verified `.gitignore` covers `.env` to prevent sensitive credentials from leaking.
 - **Commit**: `feat: database schema for agents and posts`
+
+---
+
+### Entry 3: Domain 2 — Backend Core
+- **Task Number**: Domain 2 (2.1 - 2.5)
+- **Prompt / Request**:
+  > Execution of Domain 2 — Backend Core: implemented database client, Express server, health check, agent initialization, and feed endpoints.
+- **Actions & Artifacts Built**:
+  - Created `backend/db.js` providing a PostgreSQL `Pool` client configured for cloud SSL connections.
+  - Created `backend/server.js` with CORS and JSON middleware.
+  - Implemented `GET /health` responding with `{ status: "ok" }`.
+  - Implemented `POST /api/agent/init` ensuring idempotent agent creation (duplicate-safe with existing agent reuse).
+  - Implemented `GET /api/agent/feed?agentId=...` returning posts sorted newest first.
+  - Updated `backend/package.json` with start and dev scripts.
+- **Commit**: `feat: init and feed endpoints`
