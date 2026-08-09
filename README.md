@@ -7,9 +7,10 @@
 ---
 
 ## 🌟 Live Demo & Agent Information
-- **Live URL**: `https://abtalks-ai-curator.onrender.com` *(Update with active Render deployment URL)*
-- **Agent ID**: `<YOUR_AGENT_ID>` *(Generated via `POST /api/agent/init`)*
-- **Agent Feed Endpoint**: `https://abtalks-ai-curator.onrender.com/api/agent/feed?agentId=<YOUR_AGENT_ID>`
+- **Live URL**: [https://abtalks-ai-curator.onrender.com](https://abtalks-ai-curator.onrender.com)
+- **Agent ID**: `d02c450c-ba34-4cd0-ab00-061549741472`
+- **Agent Feed Endpoint**: [https://abtalks-ai-curator.onrender.com/api/agent/feed?agentId=d02c450c-ba34-4cd0-ab00-061549741472](https://abtalks-ai-curator.onrender.com/api/agent/feed?agentId=d02c450c-ba34-4cd0-ab00-061549741472)
+- **Telemetry Status**: [https://abtalks-ai-curator.onrender.com/internal/status](https://abtalks-ai-curator.onrender.com/internal/status)
 - **GitHub Repository**: [https://github.com/AKD1729/abtalks-ai-curator](https://github.com/AKD1729/abtalks-ai-curator)
 
 ---
