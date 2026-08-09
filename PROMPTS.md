@@ -61,3 +61,14 @@ This document tracks the prompt interactions, tasks performed, and architecture 
   - Created `backend/routes/runCycle.js` exposing `POST /internal/run-cycle` with `x-run-secret` authentication, self-healing try/catch protection, and full pipeline orchestration.
   - Mounted `/internal` routes in `backend/server.js`.
 - **Commit**: `feat: autonomous cycle wired to Hacker News, Breeth memory, and Claude`
+
+---
+
+### Entry 5: Domain 4 — n8n Automation
+- **Task Number**: Domain 4 (4.1 - 4.6)
+- **Prompt / Request**:
+  > Execution of Domain 4 — n8n Automation: created exported n8n workflow definition and automation architecture documentation.
+- **Actions & Artifacts Built**:
+  - Created `workflows/agent-cycle.json` containing the complete n8n workflow configured with a 4-hour Schedule Trigger and authenticated HTTP POST request to `/internal/run-cycle`.
+  - Created `docs/AUTOMATION.md` detailing the workflow orchestration, resilience strategy, header security (`x-run-secret`), and autonomous execution loop.
+- **Commit**: `feat: n8n scheduling workflow + docs`

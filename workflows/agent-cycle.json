@@ -1,0 +1,79 @@
+{
+  "name": "AB Talks AI Curator - Autonomous Cycle",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "1d8b74c0-3e21-4f1a-b678-0a1b2c3d4e5f",
+      "name": "Schedule Trigger (Every 4 Hours)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL || 'https://abtalks-ai-curator.onrender.com' }}/internal/run-cycle",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-run-secret",
+              "value": "={{ $env.RUN_CYCLE_SECRET || 'your-run-cycle-secret' }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "e4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b",
+      "name": "HTTP Request - Trigger Autonomous Run Cycle",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger (Every 4 Hours)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Trigger Autonomous Run Cycle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
+  "meta": {
+    "instanceId": "abtalks-curator-n8n-instance"
+  },
+  "id": "abtalks-agent-cycle-workflow",
+  "tags": []
+}
