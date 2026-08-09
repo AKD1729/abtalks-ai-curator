@@ -47,3 +47,17 @@ This document tracks the prompt interactions, tasks performed, and architecture 
   - Implemented `GET /api/agent/feed?agentId=...` returning posts sorted newest first.
   - Updated `backend/package.json` with start and dev scripts.
 - **Commit**: `feat: init and feed endpoints`
+
+---
+
+### Entry 4: Domain 3 — Agent Logic (the "brain")
+- **Task Number**: Domain 3 (3.1 - 3.5)
+- **Prompt / Request**:
+  > Execution of Domain 3 — Agent Logic: integrated Hacker News discovery, Breeth memory & deduping, Claude persona writer, and autonomous run-cycle endpoint.
+- **Actions & Artifacts Built**:
+  - Created `backend/services/topicSource.js` to discover and parse trending stories from Hacker News Firebase API.
+  - Created `backend/services/memory.js` implementing `hasSeenTopic` and `saveTopic` with Breeth REST API integration and Postgres fallback.
+  - Created `backend/services/llmWriter.js` generating structured posts (`{ title, content, rationale }`) locked to the agent's persona and citing source URLs using Anthropic Claude.
+  - Created `backend/routes/runCycle.js` exposing `POST /internal/run-cycle` with `x-run-secret` authentication, self-healing try/catch protection, and full pipeline orchestration.
+  - Mounted `/internal` routes in `backend/server.js`.
+- **Commit**: `feat: autonomous cycle wired to Hacker News, Breeth memory, and Claude`

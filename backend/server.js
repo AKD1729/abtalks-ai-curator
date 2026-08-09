@@ -6,8 +6,13 @@ const pool = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const runCycleRouter = require('./routes/runCycle');
+
 app.use(cors());
 app.use(express.json());
+
+// Mount internal routes (autonomous agent execution cycles)
+app.use('/internal', runCycleRouter);
 
 // 2.2 Health check endpoint
 app.get('/health', (req, res) => {
