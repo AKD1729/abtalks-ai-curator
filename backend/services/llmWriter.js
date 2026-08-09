@@ -7,7 +7,7 @@ const { withRetry } = require('./retry');
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const DEFAULT_ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-5-haiku-20241022';
-const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-2.5-flash', 'gemini-pro'];
 
 /**
  * Generates an editorial post and selection rationale using Gemini or Claude
@@ -65,9 +65,9 @@ JSON Structure:
   "rationale": "Explicit explanation of why this topic was selected, its relevance to ${agent.topic_focus}, and citing ${topic.url}"
 }`;
 
-  try {
-    return await withRetry(async () => {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${DEFAULT_GEMINI_MODEL}:generateContent?key=${apiKey}`;
+  for (const model of GEMINI_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,7 +86,8 @@ JSON Structure:
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Gemini API error (${response.status}): ${errorText}`);
+        console.warn(`[llmWriter] Gemini model ${model} failed (${response.status}): ${errorText}. Trying next model...`);
+        continue;
       }
 
       const data = await response.json();
@@ -95,19 +96,21 @@ JSON Structure:
       const parsed = JSON.parse(rawText);
 
       if (!parsed.title || !parsed.content || !parsed.rationale) {
-        throw new Error('Gemini JSON is missing required fields (title, content, or rationale)');
+        continue;
       }
 
+      console.log(`[llmWriter] Successfully generated post via Gemini (${model})!`);
       return {
         title: parsed.title.trim(),
         content: parsed.content.trim(),
         rationale: parsed.rationale.trim()
       };
-    }, { maxRetries: 2, initialDelayMs: 1000 });
-  } catch (error) {
-    console.error('[llmWriter] Error calling Gemini API after retries:', error.message);
-    return generateFallbackPost({ agent, topic, errorReason: error.message });
+    } catch (err) {
+      console.warn(`[llmWriter] Error with Gemini model ${model}:`, err.message);
+    }
   }
+
+  return generateFallbackPost({ agent, topic, errorReason: 'Gemini model iteration fallback' });
 }
 
 /**
