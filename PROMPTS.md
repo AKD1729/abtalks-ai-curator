@@ -21,3 +21,14 @@ This document tracks the prompt interactions, tasks performed, and architecture 
   - Installed dependencies: `express`, `pg`, `dotenv`, `cors`, `node-fetch`.
   - Created `backend/.env.example` with required environment variable template keys.
 - **Commit**: `chore: project scaffold and dependencies`
+
+---
+
+### Entry 2: Domain 1 — Database Setup
+- **Task Number**: Domain 1 (1.1 - 1.4)
+- **Prompt / Request**:
+  > Execution of Domain 1 — Database Setup: created database schema with `agents` and `posts` tables.
+- **Actions & Artifacts Built**:
+  - Created `docs/schema.sql` defining PostgreSQL schemas for `agents` and `posts` tables with UUID primary keys and timestamps.
+  - Verified `.gitignore` covers `.env` to prevent sensitive credentials from leaking.
+- **Commit**: `feat: database schema for agents and posts`
