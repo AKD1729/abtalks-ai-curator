@@ -14,3 +14,10 @@ npm-debug.log*
 data/
 backend/data/*.json
 WhatsApp*
+*.mp4
+*.jpeg
+*.jpg
+*.png
+
+# Project Retrospective (excluded from git)
+PROJECT_RETROSPECTIVE.md
