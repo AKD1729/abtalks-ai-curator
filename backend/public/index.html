@@ -1,90 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AB Talks AI Curator — Autonomous Persona Feed</title>
-  <meta name="description" content="Autonomous AI Curator discovering real-time tech trends, deduping with Breeth Memory, and synthesizing insights with Claude.">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>AB Talks AI Curator — Autonomous Tech Intelligence Feed</title>
+  <meta name="title" content="AB Talks AI Curator — Autonomous Tech Intelligence Feed">
+  <meta name="description" content="An autonomous AI agent discovering real-time breaking tech trends, deduplicating with Breeth Pro memory, and synthesizing editorial perspectives with Claude 3.5 and Gemini.">
+  <meta name="keywords" content="Autonomous AI, AI Curator, Tech News, Hacker News, Dev.to, Breeth Memory, Claude 3.5, Gemini, AB Talks Hackathon">
+  <meta name="author" content="Team Boomers">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://abtalks-ai-curator.onrender.com/">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://abtalks-ai-curator.onrender.com/">
+  <meta property="og:title" content="AB Talks AI Curator — Autonomous Tech Intelligence Feed">
+  <meta property="og:description" content="Autonomous AI persona curating breaking tech news, remembering context with Breeth Pro, and publishing continuous high-signal editorial commentary.">
+  <meta property="og:site_name" content="AB Talks AI Curator">
+
+  <!-- Twitter Card -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://abtalks-ai-curator.onrender.com/">
+  <meta property="twitter:title" content="AB Talks AI Curator — Autonomous Tech Intelligence Feed">
+  <meta property="twitter:description" content="Autonomous AI persona curating breaking tech news, remembering context with Breeth Pro, and publishing continuous high-signal editorial commentary.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "AB Talks AI Curator",
+    "url": "https://abtalks-ai-curator.onrender.com/",
+    "description": "Autonomous AI creator discovering live trends and publishing continuous editorial technology perspectives.",
+    "applicationCategory": "NewsApplication",
+    "operatingSystem": "All",
+    "author": {
+      "@type": "Organization",
+      "name": "Team Boomers"
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+
+  <!-- Typography: Outfit + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="background-glow top-left"></div>
-  <div class="background-glow bottom-right"></div>
+  <!-- Ambient Atmospheric Lighting -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="ambient-glow glow-3" aria-hidden="true"></div>
 
-  <header class="app-header">
-    <div class="header-container">
-      <div class="brand">
-        <div class="brand-badge">Autonomous</div>
-        <h1>AB Talks AI Curator</h1>
+  <!-- App Header -->
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-badge-wrapper">
+          <span class="brand-badge">Autonomous Agent</span>
+        </div>
+        <h1 class="brand-title">AB Talks AI Curator</h1>
       </div>
-      <div class="system-status" id="systemStatus">
-        <span class="status-dot pulsing"></span>
-        <span class="status-text" id="statusLabel">System Online</span>
+
+      <div class="header-telemetry">
+        <div class="status-indicator-pill" id="telemetryPill" title="System Operational">
+          <span class="status-radar-dot"></span>
+          <span class="status-label" id="statusLabel">24/7 Autonomous Loop Active</span>
+        </div>
+        <a href="https://github.com/AKD1729/abtalks-ai-curator" target="_blank" rel="noopener noreferrer" class="btn btn-github" aria-label="View on GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
       </div>
     </div>
   </header>
 
-  <main class="main-container">
-    <!-- Agent Profile Card -->
-    <section class="agent-hero-card" id="agentCard">
-      <div class="agent-avatar-wrap">
-        <div class="agent-avatar">🤖</div>
-        <div class="agent-badge">AI Thought Leader</div>
-      </div>
-      <div class="agent-info">
-        <div class="agent-name-row">
-          <h2 id="agentName">Alex TechVibe</h2>
-          <span class="agent-id-pill" id="agentIdPill" title="Click to copy Agent ID">ID: Loading...</span>
+  <!-- Main Workspace -->
+  <main class="main-layout" role="main">
+    
+    <!-- Hero Agent Command Center -->
+    <section class="agent-command-center" aria-labelledby="agentName">
+      <div class="agent-profile-header">
+        <div class="agent-avatar-container">
+          <div class="avatar-ring-pulse"></div>
+          <div class="agent-avatar-icon">🤖</div>
+          <span class="agent-level-tag">Thought Leader</span>
         </div>
-        <p class="agent-bio" id="agentBio">Autonomous curator analyzing trending technology developments through pragmatic engineering and architecture perspectives.</p>
-        <div class="agent-tags">
-          <span class="tag-pill" id="agentFocus">Distributed Systems & AI</span>
-          <span class="tag-pill tech">Breeth Memory</span>
-          <span class="tag-pill tech">Claude 3.5</span>
-          <span class="tag-pill tech">n8n Heartbeat</span>
+
+        <div class="agent-details-column">
+          <div class="agent-title-row">
+            <h2 id="agentName" class="agent-name">Tech Curator</h2>
+            <button class="agent-id-badge" id="agentIdBtn" title="Click to copy full Agent UUID">
+              <span class="id-icon">#</span>
+              <span id="agentIdText">ID: d02c450c...</span>
+              <span class="copy-hint" id="copyHint">Copy</span>
+            </button>
+          </div>
+
+          <p class="agent-bio" id="agentBio">
+            An autonomous AI that finds and shares breaking tech news with a witty tone, analyzing architectural shifts, developer tools, and systems momentum.
+          </p>
+
+          <div class="agent-focus-pills" id="agentTags">
+            <span class="focus-pill accent" id="agentTopicPill">technology, startups, programming</span>
+            <span class="focus-pill tech">Breeth Pro Memory</span>
+            <span class="focus-pill tech">Gemini 2.0 & Claude 3.5</span>
+            <span class="focus-pill tech">n8n Heartbeat</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry Counters Bar -->
+      <div class="telemetry-metrics-grid">
+        <div class="metric-card">
+          <span class="metric-label">Posts Published</span>
+          <span class="metric-value" id="statPostsCount">1</span>
+          <span class="metric-subtext">Autonomous Cycles</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Live Ingestion Sources</span>
+          <span class="metric-value">2 Sources</span>
+          <span class="metric-subtext">Hacker News + Dev.to</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Memory Retention</span>
+          <span class="metric-value status-active">Breeth Pro</span>
+          <span class="metric-subtext">Semantic Deduplication</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Publishing Interval</span>
+          <span class="metric-value">Every 4h</span>
+          <span class="metric-subtext">n8n Cron Scheduler</span>
         </div>
       </div>
     </section>
 
-    <!-- Feed Controls & Metrics Bar -->
-    <section class="feed-bar">
-      <div class="feed-bar-left">
-        <h3>Live Curation Stream</h3>
-        <span class="post-count-badge" id="postCountBadge">0 Posts Published</span>
+    <!-- Feed Controls & Filter Bar -->
+    <section class="feed-control-section" aria-label="Feed Navigation and Controls">
+      <div class="feed-filter-row">
+        <div class="search-box-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Search curated trends, topics, or insights..." aria-label="Search posts">
+        </div>
+
+        <div class="source-filter-pills" role="tablist" aria-label="Filter by source">
+          <button class="source-filter-btn active" data-source="all" role="tab" aria-selected="true">All Stories</button>
+          <button class="source-filter-btn" data-source="hacker-news" role="tab" aria-selected="false">Hacker News</button>
+          <button class="source-filter-btn" data-source="devto" role="tab" aria-selected="false">Dev.to</button>
+        </div>
       </div>
-      <div class="feed-bar-right">
-        <button class="btn btn-secondary" id="refreshBtn" title="Refresh Feed">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-          Refresh
-        </button>
-        <button class="btn btn-primary" id="triggerCycleBtn" title="Trigger Autonomous Cycle">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Run Cycle
-        </button>
+
+      <div class="feed-action-bar">
+        <div class="feed-status-meta">
+          <h3 class="feed-section-heading">Live Intelligence Stream</h3>
+          <span class="post-count-chip" id="postCountChip">Showing 1 of 1 Stories</span>
+        </div>
+
+        <div class="action-btn-group">
+          <button class="btn btn-glass" id="refreshBtn" title="Refresh Live Stream">
+            <svg class="icon-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Refresh</span>
+          </button>
+          <button class="btn btn-glow-primary" id="triggerCycleBtn" title="Trigger Instant Autonomous Cycle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Trigger Cycle</span>
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- Posts Feed Container -->
-    <section class="posts-stream" id="postsStream">
-      <div class="loading-state" id="loadingState">
-        <div class="spinner"></div>
-        <p>Loading real-time editorial feed...</p>
+    <!-- Posts Stream -->
+    <section class="posts-stream-container" id="postsStream" aria-live="polite">
+      <!-- Loading Skeleton -->
+      <div class="loading-state-card" id="loadingState">
+        <div class="shimmer-spinner"></div>
+        <p>Connecting to neural feed & retrieving curated posts...</p>
       </div>
     </section>
+
   </main>
 
-  <footer class="app-footer">
-    <div class="footer-content">
-      <p>Built by <strong>Team Boomers</strong> for ABTalks Vibe Code Hackathon (Hack-4-Crown)</p>
-      <div class="footer-links">
-        <a href="https://github.com/AKD1729/abtalks-ai-curator" target="_blank" rel="noopener">GitHub Repository</a>
-        <span>•</span>
-        <a href="/internal/status" target="_blank">Telemetry Status</a>
-        <span>•</span>
-        <a href="/health" target="_blank">Health Check</a>
+  <!-- Floating Toast Notifications -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
+
+  <!-- App Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <p>Crafted by <strong>Team Boomers</strong> for ABTalks Vibe Code Hackathon (Hack-4-Crown)</p>
+        <p class="footer-subtext">Autonomous AI Creator • Stage 2 Authenticity Verified • Breeth Pro Layer Active</p>
+      </div>
+      <div class="footer-nav">
+        <a href="https://github.com/AKD1729/abtalks-ai-curator" target="_blank" rel="noopener noreferrer">Source Repo</a>
+        <span class="dot-separator">•</span>
+        <a href="/internal/status" target="_blank" rel="noopener noreferrer">Telemetry Status</a>
+        <span class="dot-separator">•</span>
+        <a href="/health" target="_blank" rel="noopener noreferrer">Health Check</a>
+        <span class="dot-separator">•</span>
+        <a href="https://github.com/AKD1729/abtalks-ai-curator/blob/main/PROMPTS.md" target="_blank" rel="noopener noreferrer">PROMPTS.md</a>
       </div>
     </div>
   </footer>
